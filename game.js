@@ -2,8 +2,8 @@
 // 1プレイ = スピーチ8段。段ごとに目が合った卓の人がいて、その人の本音（くじ）に合う一文を3択から選ぶ
 // 台詞は卓に関係なく共通。当たりは卓の物としぐさで読む。新郎の黒歴史は罠（1回目は新郎が目で止め、2回目で司会が割って入る）
 // 描画は three.js（会場・卓・切り抜きの人物）、時間は固定60Hz（performance.now で数える）
-import * as THREE from './vendor/three.module.min.js?v=3'
-import { setupLook } from './look.js?v=3'
+import * as THREE from './vendor/three.module.min.js?v=4'
+import { setupLook } from './look.js?v=4'
 window.__jsUp = true
 const D = window.WD, T = window.WT
 const $ = s => document.querySelector(s)
@@ -13,7 +13,7 @@ const L = () => D.UI[lang]
 const tx = o => (o ? (o[lang] ?? o.ja) : '')
 const len = s => [...s].length
 function rng(seed) { let a = seed >>> 0; return () => { a = (a + 0x6D2B79F5) >>> 0; let t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296 } }
-const V = '?v=3'
+const V = '?v=4'
 
 // ---------- 釣り合いの数字（sim.mjs で確かめる）
 // 一文の制限時間 = 読む時間（2.5秒 + 頭の中の一言1字0.12秒 + 3択1字0.06秒）を 10〜12秒に収めたもの。最初の一文は14秒、初めての1回は+2秒
