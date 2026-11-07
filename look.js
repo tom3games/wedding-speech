@@ -1,7 +1,7 @@
 // look.js — tom3games の3Dバカゲー共通の「見た目」部品（Three.js r185）。依存は import map の 'three' だけ。
 // 正本は ~/Desktop/claudecode/_shared/look.js。各ゲームへはファイルをコピーして同梱する（リポジトリが別なので）。
 // 使い方は _shared/README.md。
-import * as THREE from './vendor/three.module.min.js?v=1'
+import * as THREE from './vendor/three.module.min.js?v=2'
 
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v))
 const isTouch = typeof matchMedia !== 'undefined' && matchMedia('(pointer: coarse)').matches

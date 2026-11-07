@@ -12,6 +12,7 @@ const URL0 = `http://localhost:${PORT}/`
 let pass = 0, fail = 0
 const results = []
 async function t(name, fn) {
+  if (process.env.ONLY && !name.includes(process.env.ONLY)) return
   try { const r = await fn(); if (r === false) throw new Error('false'); pass++; results.push(`ok   ${name}${r && r !== true ? '  ' + JSON.stringify(r) : ''}`) }
   catch (e) { fail++; results.push(`FAIL ${name}  ${e.message.split('\n')[0]}`) }
 }
@@ -261,6 +262,13 @@ await t('チュートリアル: 初めての1回だけ、物を指す指と案�
   const r = await p.evaluate(() => { localStorage.removeItem('ws_tut'); WS.start(5, { skipIntro: true }); for (let i = 0; i < 200 && WS.state().phase !== 'turn'; i++) WS.dbg.step(5); WS.dbg.step(30); const h = document.querySelector('#hand'), r = h.getBoundingClientRect(); return { hand: !h.hidden, x: r.left, y: r.top, clue: WS.state().clue } })
   expect(r.hand && r.x > 0 && r.x < 390 && r.y > 40 && r.y < 700 && /押す/.test(r.clue), JSON.stringify(r)); return r
 })
+await t('卓の物を本物の指で押すと説明が出る（上の層に吸われない）', async () => { await fresh(67); const s = await toTalk(p)
+  await p.evaluate(() => WS.dbg.step(90))   // カメラが卓に寄りきってから（人も寄ってから押す）
+  const out = []
+  for (const [i, dx] of [[0, 0], [1, 0], [0, 30]]) { await p.evaluate(() => { document.querySelector('#clue').hidden = true })
+    const xy = await p.evaluate(n => WS.itemXY(n), s.items[i]); await p.mouse.click(xy.x + dx, xy.y)
+    const clue = await p.evaluate(() => WS.state().clue), want = await p.evaluate(k => WS.T.ITEMS[k].ja, s.items[i]); const top = await p.evaluate(({ x, y }) => document.elementsFromPoint(x, y).slice(0, 3).map(e => e.id || e.tagName), { x: xy.x + dx, y: xy.y }); expect(clue === want, JSON.stringify({ i, dx, xy, top, clue, want })); out.push(Math.round(xy.x) + ',' + Math.round(xy.y)) }
+  return out })
 await t('卓の物を押すと説明が出る', async () => { await fresh(67); const s = await toTalk(p); const r = await p.evaluate(n => { const k = WS.tapItem(n); return { k, clue: WS.state().clue } }, s.items[1]); expect(r.k === s.items[1] && r.clue === (await p.evaluate(k => WS.T.ITEMS[k].ja, r.k)), JSON.stringify(r)); return r })
 
 // 3サイズ × 全画面（Chromium）

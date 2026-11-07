@@ -2,8 +2,8 @@
 // 1プレイ = スピーチ8段。段ごとに目が合った卓の人がいて、その人の本音（くじ）に合う一文を3択から選ぶ
 // 台詞は卓に関係なく共通。当たりは卓の物としぐさで読む。新郎の黒歴史は罠（1回目は新郎が目で止め、2回目で司会が割って入る）
 // 描画は three.js（会場・卓・切り抜きの人物）、時間は固定60Hz（performance.now で数える）
-import * as THREE from './vendor/three.module.min.js?v=1'
-import { setupLook } from './look.js?v=1'
+import * as THREE from './vendor/three.module.min.js?v=2'
+import { setupLook } from './look.js?v=2'
 window.__jsUp = true
 const D = window.WD, T = window.WT
 const $ = s => document.querySelector(s)
@@ -13,7 +13,7 @@ const L = () => D.UI[lang]
 const tx = o => (o ? (o[lang] ?? o.ja) : '')
 const len = s => [...s].length
 function rng(seed) { let a = seed >>> 0; return () => { a = (a + 0x6D2B79F5) >>> 0; let t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296 } }
-const V = '?v=1'
+const V = '?v=2'
 
 // ---------- 釣り合いの数字（sim.mjs で確かめる）
 // 一文の制限時間 = 読む時間（2.5秒 + 頭の中の一言1字0.12秒 + 3択1字0.06秒）を 10〜12秒に収めたもの。最初の一文は14秒、初めての1回は+2秒
@@ -552,7 +552,9 @@ function aimSpec(k) {
   if (k === 'kid') return { at: new THREE.Vector3(0.62, 0.7, -1.7), fov: 46 }
   if (k === 'exbf') return { at: new THREE.Vector3(POS.back1.x + 0.5, 1.0, POS.back1.z), fov: 20 }
   const p = POS[k], dist = CAM0.distanceTo(p)
-  return { at: new THREE.Vector3(p.x, 1.0, p.z - 0.4), fov: THREE.MathUtils.clamp(2 * Math.atan(1.0 / dist) * 180 / Math.PI, 14, 36) }
+  // 縦長の画面は横が狭いので、卓の物（中心から左右に約0.3m）が横に収まるところまで引く
+  const asp = VW / Math.max(1, VH), side = 2 * Math.atan(0.62 / dist / asp) * 180 / Math.PI
+  return { at: new THREE.Vector3(p.x, 1.0, p.z), fov: THREE.MathUtils.clamp(Math.max(2 * Math.atan(1.0 / dist) * 180 / Math.PI, side), 14, 48) }
 }
 function aim(k) { G.aimKey = k; const s = aimSpec(k); AIM.at = s.at; AIM.fov = s.fov; if (G.spot) { const p = POS[k]; G.spotOn = !!(p && TABLES.includes(k)) || k === 'couple'; if (p) { G.spot.target.position.set(p.x, 0.7, p.z); G.spot.position.set(p.x + 0.4, 5, p.z + 1.5) } } }
 const camAt = new THREE.Vector3(0.1, 0.85, -6), camPos = CAM0.clone(); let camFov = 50
@@ -705,10 +707,17 @@ function tapAt(X, Y) {
   if (!G.run || (G.mode !== 'play' && G.mode !== 'event')) return null
   ndc.set(X / VW * 2 - 1, -(Y / VH) * 2 + 1); ray.setFromCamera(ndc, camera)
   const hit = ray.intersectObjects(itemMeshes, false)[0]
-  if (!hit) return null
-  const n = hit.object.userData.item; setClue(tx(T.ITEMS[n])); Sfx('tap'); $('#hand').hidden = true
+  let obj = hit && hit.object
+  if (!obj) { // 物は画面で小さいので、指が少し外れても一番近い物を拾う（44px 以内）
+    let best = 44
+    for (const m of itemMeshes) { m.getWorldPosition(proj); proj.y += 0.06; proj.project(camera); if (proj.z > 1) continue
+      const d = Math.hypot((proj.x * 0.5 + 0.5) * VW - X, (-proj.y * 0.5 + 0.5) * VH - Y); if (d < best) { best = d; obj = m } }
+  }
+  if (!obj) return null
+  const n = obj.userData.item; setClue(tx(T.ITEMS[n])); Sfx('tap'); $('#hand').hidden = true
   return n
 }
+function itemXY(n) { const it = itemMeshes.find(m => m.userData.item === n && m.userData.table === G.run.fk); if (!it) return null; it.getWorldPosition(proj); proj.y += 0.06; proj.project(camera); return { x: (proj.x * 0.5 + 0.5) * VW, y: (-proj.y * 0.5 + 0.5) * VH } }
 function tapItem(n) { const it = itemMeshes.find(m => m.userData.item === n && m.userData.table === G.run.fk); if (!it) return null; it.getWorldPosition(proj); proj.y += 0.06; proj.project(camera); return tapAt((proj.x * 0.5 + 0.5) * VW, (-proj.y * 0.5 + 0.5) * VH) }
 function buildHow() { const u = L(); $('#howBody').innerHTML = `<h2>${u.howto}</h2>` + u.how.map(s => `<p>${s}</p>`).join('') + `<small>${u.legal}</small><a href="privacy.html">${u.privacy}</a>` }
 function applyLang() {
@@ -750,7 +759,7 @@ function muteIcon() { $('#icoSnd').style.opacity = Snd.muted ? 0.35 : 1; $('#bMu
 
 // ---------- 検証の窓口
 window.WS = {
-  G, D, T, NUM, Snd, buildRun, choose, result, rankOf, score, tapAt, tapItem, evCorrect, people, itemMeshes, takeSnap, drawLetter,
+  G, D, T, NUM, Snd, buildRun, choose, result, rankOf, score, tapAt, tapItem, itemXY, evCorrect, people, itemMeshes, takeSnap, drawLetter,
   start: (seed, o) => startRun(seed, o),
   forceEvent: (k, cueK) => { const run = G.run; if (G.mode !== 'play' || !run || run.state !== 'turn') return false; const E = D.EVENTS[k]; run.state = 'react'; G.clock = null; startEvent({ k, after: run.step, cue: E.cues ? (E.cues.find(c => c.k === cueK) || E.cues[0]) : null, delay: 0.6, done: true }); return true },
   // 画面に出ている物だけを返す（読むbotはここしか見ない）。_want と grades は検証と「わざと外す」botだけが使う
