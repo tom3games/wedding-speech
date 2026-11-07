@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>結婚式の友人スピーチ（原稿が飛んだ）</title>
+<meta name="description" content="親友の結婚式で友人代表のスピーチ。マイクの前で原稿が真っ白になった。会場の顔と卓の物を読んで、次の一文を3つから選ぶ。新郎の黒歴史は言うな。">
+<meta property="og:type" content="website">
+<meta property="og:title" content="結婚式の友人スピーチ（原稿が飛んだ）">
+<meta property="og:description" content="原稿が真っ白。会場の顔と卓の物を読んで、次の一文を選べ。新郎の黒歴史は言うな。">
+<meta property="og:image" content="https://tom3games.github.io/wedding-speech/og.png">
+<meta property="og:url" content="https://tom3games.github.io/wedding-speech/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#1b1410">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Klee+One:wght@400;600&family=Shippori+Mincho+B1:wght@600;800&family=Zen+Kaku+Gothic+New:wght@500;700&display=swap" rel="stylesheet">
+<style>
+[hidden]{display:none!important}
+:root{--ivory:#f7f0e3;--paper:#fbf8f1;--gold:#b8955a;--gold2:#e2c88f;--ink:#23304d;--dark:#1b1410;--rose:#b4545e;--sans:"Zen Kaku Gothic New",system-ui,sans-serif;--min:"Shippori Mincho B1",serif;--hand:"Klee One",serif}
+*{box-sizing:border-box;margin:0;padding:0}
+html{touch-action:manipulation;-webkit-text-size-adjust:100%;text-size-adjust:100%;background:var(--dark)}
+body{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;font-family:var(--sans);color:#fff;overflow:hidden;height:100svh;background:var(--dark)}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+canvas{touch-action:manipulation}
+.view{position:fixed;inset:0;height:100svh;overflow:hidden}
+#cv{position:fixed;inset:0;width:100vw;height:100svh;display:block}
+
+/* ロード画面: 封筒に招待状が差し込まれていく */
+#loading{position:fixed;inset:0;z-index:90;background:#1b1410;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;transition:opacity .35s}
+#loading svg{width:120px;height:120px}
+#loading p{font-family:var(--min);font-size:14px;letter-spacing:.12em;color:var(--gold2)}
+#loading .flame{transform-origin:60px 34px;animation:flick .9s ease-in-out infinite alternate}
+@keyframes flick{0%{transform:scale(1,1) rotate(-2deg)}100%{transform:scale(.88,1.08) rotate(2deg)}}
+
+#corner{position:fixed;top:max(8px,env(safe-area-inset-top));right:8px;z-index:40;display:flex;gap:6px}
+#corner button{min-width:40px;height:40px;border-radius:20px;background:rgba(20,14,10,.55);color:#f3e6cc;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;padding:0 10px}
+#corner svg{width:20px;height:20px;fill:#f3e6cc}
+
+/* タイトル: 招待状のカード */
+#vTitle{display:flex;flex-direction:column;justify-content:space-between;padding:calc(64px + env(safe-area-inset-top)) 18px calc(20px + env(safe-area-inset-bottom))}
+.card{align-self:center;width:min(86vw,360px);background:var(--ivory);color:#3a2a1a;padding:22px 18px 20px;text-align:center;position:relative;transform:rotate(-1.2deg);box-shadow:0 18px 40px rgba(0,0,0,.45)}
+.card::before{content:"";position:absolute;inset:8px;border:1px solid var(--gold);outline:1px solid var(--gold);outline-offset:3px;pointer-events:none}
+.card .ser{font-family:var(--min);font-size:12px;letter-spacing:.4em;color:var(--gold)}
+.card h1{font-family:var(--min);font-weight:800;font-size:clamp(26px,8.4vw,36px);line-height:1.25;margin:10px 0 6px;letter-spacing:.04em}
+.card h1 em{display:block;font-style:normal;font-size:.62em;letter-spacing:.2em;color:var(--rose)}
+.card .sub{font-family:var(--hand);font-size:15px;color:#6a5440}
+.tBottom{display:flex;flex-direction:column;align-items:center;gap:10px}
+#bStart{width:min(80vw,320px);min-height:56px;border-radius:6px;background:linear-gradient(#e9d3a0,#c49c5c);color:#2a1b0c;font-family:var(--min);font-weight:800;font-size:19px;letter-spacing:.12em;box-shadow:0 5px 0 #7a5a2c,0 10px 22px rgba(0,0,0,.4)}
+#bStart:active{transform:translateY(3px);box-shadow:0 2px 0 #7a5a2c}
+#bHow{min-height:40px;padding:0 18px;color:#f3e6cc;font-size:14px;text-decoration:none;border-bottom:1px solid rgba(243,230,204,.5)}
+
+/* 遊び */
+#me{position:fixed;left:-6vw;width:min(58vw,300px);pointer-events:none;z-index:5;filter:brightness(.82) contrast(1.05)}
+#bubble{position:fixed;z-index:12;width:max-content;max-width:min(78vw,300px);padding:9px 13px;border-radius:14px;background:#fffdf7;color:#2b2218;font-size:clamp(14px,4vw,16px);line-height:1.4;font-weight:700;box-shadow:0 6px 16px rgba(0,0,0,.35);transform:translateX(-50%);text-align:center}
+#bubble::after{content:"";position:absolute;left:50%;bottom:-8px;margin-left:-8px;border:8px solid transparent;border-bottom:0;border-top-color:#fffdf7}
+#bubble.me{background:rgba(14,9,6,.78);box-shadow:none;max-width:min(64vw,260px);color:#fff;font-family:var(--hand);font-weight:600;text-shadow:0 1px 3px #000,0 0 10px rgba(0,0,0,.8);transform:none;text-align:left}
+#bubble.me::after,#bubble.said::after,#bubble.mc::after,#bubble.free::after{display:none}
+#bubble.said{background:rgba(24,18,14,.82);color:#fff6e3;font-family:var(--hand);border:1px solid rgba(226,200,143,.5)}
+#bubble.mc{background:#fff2d9;color:#5a2c12}
+#bubble.cold{background:#e9eef4;color:#2c3546}
+#note{position:fixed;left:0;right:0;bottom:0;z-index:10;padding:0 12px calc(10px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:6px}
+#clueRow{display:flex;align-items:flex-end;gap:8px;min-height:44px}
+#clue{flex:1;align-self:center;font-size:clamp(13px,3.7vw,15px);line-height:1.35;color:#fff7e6;background:rgba(18,12,8,.72);padding:7px 11px;border-left:3px solid var(--gold2)}
+#clue.tip{border-left-color:#f08f6a;background:rgba(60,24,16,.8)}
+#clue.warn{border-left-color:#ff5a4a;background:rgba(90,16,16,.85)}
+#candle{width:44px;height:64px;flex:none;margin-left:auto}
+#paper{position:relative;background:var(--paper);color:var(--ink);border-radius:2px;padding:10px 12px 8px 30px;transform:rotate(-.6deg);box-shadow:0 10px 26px rgba(0,0,0,.5);background-image:linear-gradient(90deg,transparent 21px,rgba(200,80,80,.45) 21px,rgba(200,80,80,.45) 22px,transparent 22px),linear-gradient(180deg,rgba(255,255,255,0),rgba(0,0,0,.035)),repeating-linear-gradient(180deg,transparent 0 45px,rgba(70,110,170,.22) 45px 46px)}
+#paper::after{content:"";position:absolute;left:0;right:0;top:50%;height:1px;background:rgba(0,0,0,.06);pointer-events:none}
+.ln{display:block;width:100%;min-height:46px;text-align:left;font-family:var(--hand);font-weight:600;font-size:clamp(14px,4.15vw,17px);line-height:1.3;color:var(--ink);padding:6px 4px;position:relative}
+.ln:disabled{color:rgba(35,48,77,.5);cursor:default}
+.ln.ev{color:#5a1f12}
+.ln.pick{color:var(--ink)}
+.ln.pick::after{content:"";position:absolute;left:0;right:6%;bottom:9px;height:2px;background:var(--rose);transform:rotate(-.6deg)}
+.ln.black{color:var(--ink)}
+#paper.blank .ln{color:transparent}
+
+/* 結果: お礼状 */
+#vEnd{display:flex;flex-direction:column;align-items:center;padding:calc(12px + env(safe-area-inset-top)) 12px calc(10px + env(safe-area-inset-bottom));gap:8px;background:radial-gradient(ellipse at 50% 20%,#3a2a1e,#140e0a)}
+#letterBox{flex:1;min-height:0;width:100%;display:flex;align-items:center;justify-content:center}
+#letter{display:block;box-shadow:0 14px 30px rgba(0,0,0,.5)}
+.endBtns{width:min(100%,420px);display:flex;flex-direction:column;gap:6px}
+.row{display:flex;gap:6px}
+.row button{flex:1;min-height:44px;border-radius:6px;background:rgba(255,248,232,.1);border:1px solid rgba(226,200,143,.45);color:#f6e9cf;font-weight:700;font-size:14px}
+.row button:disabled{opacity:.4}
+#bAgain{background:linear-gradient(#e9d3a0,#c49c5c);color:#2a1b0c;border:0;font-family:var(--min);font-weight:800;font-size:16px}
+
+/* 重ねる画面 */
+.ovl{position:fixed;inset:0;z-index:30}
+#say{display:flex;flex-direction:column;justify-content:flex-end;padding:0 12px calc(14px + env(safe-area-inset-bottom));background:linear-gradient(transparent 40%,rgba(10,6,4,.55))}
+#sayImg{position:absolute;right:-4vw;bottom:150px;height:min(56svh,460px);pointer-events:none}
+#sayBox{position:relative;background:var(--paper);color:#2b2218;padding:12px 14px 10px;border-top:3px solid var(--gold)}
+#sayNm{font-size:12px;color:var(--gold);letter-spacing:.1em}
+#sayLine{font-family:var(--hand);font-weight:600;font-size:clamp(16px,4.6vw,19px);line-height:1.45;min-height:2.9em;margin:2px 0 6px}
+#sayBtns{display:flex;justify-content:space-between}
+#sayBtns button{min-height:42px;padding:0 14px;font-weight:700;color:#5b4630}
+#bSayNext{background:#2b2218;color:#f6e9cf!important;border-radius:4px}
+#how{background:rgba(16,10,6,.92);display:flex;flex-direction:column;padding:calc(56px + env(safe-area-inset-top)) 20px calc(16px + env(safe-area-inset-bottom));gap:12px}
+#howBody{flex:1;min-height:0;overflow:hidden;display:flex;flex-direction:column;gap:9px;color:#f2e6cf}
+#howBody h2{font-family:var(--min);font-size:20px;color:var(--gold2)}
+#howBody p{font-size:clamp(12.5px,3.6vw,14.5px);line-height:1.55}
+#howBody small{font-size:11px;color:#bba98c;line-height:1.45;margin-top:auto}
+#howBody a{display:inline-flex;align-items:center;min-height:40px;color:#f2e6cf;font-size:13px;align-self:flex-start}
+#howBtn{min-height:46px;border-radius:6px;background:rgba(255,248,232,.12);border:1px solid rgba(226,200,143,.5);font-weight:700}
+#stopper{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;background:rgba(14,8,6,.55)}
+#stopLine{max-width:86vw;background:#fff2d9;color:#5a2c12;font-weight:700;font-size:clamp(15px,4.4vw,18px);line-height:1.4;padding:12px 16px;border-radius:12px;text-align:center}
+#stopStamp{font-family:var(--min);font-weight:800;font-size:min(16vw,8svh,68px);color:#c8271f;border:5px solid #c8271f;padding:2px 14px;transform:rotate(-12deg) scale(2.4);opacity:0;transition:transform .18s cubic-bezier(.3,1.5,.5,1),opacity .12s;background:rgba(255,245,235,.85)}
+#stopStamp.in{transform:rotate(-12deg) scale(1);opacity:1}
+#bStop{min-height:46px;min-width:200px;border-radius:6px;background:linear-gradient(#e9d3a0,#c49c5c);color:#2a1b0c;font-weight:800}
+#flash{position:fixed;inset:0;z-index:20;background:#fff;opacity:0;pointer-events:none}
+#hand{position:fixed;z-index:14;width:44px;height:44px;pointer-events:none;animation:poke 1s ease-in-out infinite}
+#hand svg{width:44px;height:44px;display:block;filter:drop-shadow(0 2px 3px rgba(0,0,0,.5))}
+/* 司会の視線: 時間がたつと画面の右端から司会がのぞき込む */
+#mcPeek{position:fixed;right:0;top:calc(46px + env(safe-area-inset-top));height:min(30svh,250px);pointer-events:none;z-index:6;transform:translateX(100%);filter:drop-shadow(-6px 6px 12px rgba(0,0,0,.45))}
+@keyframes poke{0%,100%{transform:translate(0,0)}50%{transform:translate(-6px,-8px)}}
+@media (max-height:700px){#vTitle{padding-top:calc(52px + env(safe-area-inset-top))}.card{padding:16px 14px}.ln{min-height:41px;padding:4px}#paper{padding-top:6px;padding-bottom:4px}#sayImg{height:44svh;bottom:140px}#how{gap:8px}#howBody{gap:6px}}
+</style>
+</head>
+<body>
+<canvas id="cv"></canvas>
+
+<div id="loading"><svg viewBox="0 0 120 120" aria-hidden="true"><rect x="44" y="50" width="32" height="58" rx="3" fill="#efe3c8"/><rect id="loadWax" x="44" y="108" width="32" height="0" fill="#d9c6a0"/><path class="flame" d="M60 16c7 9 9 15 9 20a9 9 0 0 1-18 0c0-5 2-11 9-20z" fill="#ffc96b"/><path d="M60 26c3 5 4 8 4 10a4 4 0 0 1-8 0c0-2 1-5 4-10z" fill="#fff4cf" class="flame"/><line x1="60" y1="44" x2="60" y2="51" stroke="#3a2a1a" stroke-width="2"/></svg><p id="loadT">テーブルを整えています</p></div>
+
+<div id="corner">
+  <button id="bLang" aria-label="language">EN</button>
+  <button id="bMute" aria-label="sound"><svg viewBox="0 0 24 24" id="icoSnd"><path d="M3 9h4l6-5v16l-6-5H3z"/><path d="M15 8.5a5 5 0 0 1 0 7v-2.2a2.6 2.6 0 0 0 0-2.6zM17 5a9 9 0 0 1 0 14v-2.4a6.6 6.6 0 0 0 0-9.2z"/></svg></button>
+</div>
+
+<main id="vTitle" class="view">
+  <div class="card"><div class="ser" id="tSeries"></div><h1 id="tTitle"></h1><p class="sub" id="tSub"></p></div>
+  <div class="tBottom"><button id="bStart"></button><button id="bHow"></button></div>
+</main>
+
+<main id="vPlay" class="view" hidden>
+  <img id="me" src="img/me.webp?v=1" alt="">
+  <img id="mcPeek" alt="">
+  <div id="bubble" hidden></div>
+  <div id="note">
+    <div id="clueRow"><div id="clue" hidden></div><canvas id="candle" width="88" height="128"></canvas></div>
+    <div id="paper"></div>
+  </div>
+  <div id="hand" hidden><svg viewBox="0 0 44 44" aria-hidden="true"><path d="M14 40c-3-5-7-10-7-13 0-2 2-3 4-1l4 4V8a3 3 0 0 1 6 0v12l2-1a3 3 0 0 1 5 1l1 1a3 3 0 0 1 4 2l1 1a3 3 0 0 1 4 3v6c0 4-2 7-4 9z" fill="#fff" stroke="#2b2218" stroke-width="2" stroke-linejoin="round"/></svg></div>
+</main>
+
+<main id="vEnd" class="view" hidden>
+  <div id="letterBox"><canvas id="letter" width="1080" height="1350"></canvas></div>
+  <div class="endBtns">
+    <div class="row"><button id="bSave"></button><button id="bPost"></button></div>
+    <div class="row"><button id="bAgain"></button><button id="bTitle"></button></div>
+  </div>
+</main>
+
+<div class="ovl" id="say" hidden><img id="sayImg" alt=""><div id="sayBox"><b id="sayNm"></b><p id="sayLine"></p><div id="sayBtns"><button id="bSaySkip"></button><button id="bSayNext"></button></div></div></div>
+<div class="ovl" id="stopper" hidden><div id="stopLine"></div><div id="stopStamp"></div><button id="bStop" hidden></button></div>
+<div class="ovl" id="how" hidden><div id="howBody"></div><button id="howBtn"></button></div>
+<div id="flash"></div>
+
+<script>
+(function(){
+  var opt={passive:false};
+  ['gesturestart','gesturechange','gestureend'].forEach(function(n){document.addEventListener(n,function(e){e.preventDefault()},opt)});
+  document.addEventListener('touchmove',function(e){if(e.touches&&e.touches.length>1)e.preventDefault()},opt);
+  var last=0;document.addEventListener('touchend',function(e){var n=Date.now();if(n-last<300&&!(e.target.closest&&e.target.closest('button,a')))e.preventDefault();last=n},opt);
+  document.addEventListener('dblclick',function(e){e.preventDefault()},opt);
+  window.addEventListener('wheel',function(e){if(e.ctrlKey)e.preventDefault()},opt);
+  window.addEventListener('keydown',function(e){if((e.ctrlKey||e.metaKey)&&['+','-','=','0',';'].indexOf(e.key)>=0)e.preventDefault()});
+})();
+(function(){
+  var errs=[];
+  window.addEventListener('error',function(e){errs.push((e.message||'error')+' @'+(e.filename||'')+':'+(e.lineno||''))});
+  window.addEventListener('unhandledrejection',function(e){errs.push('reject: '+(e.reason&&e.reason.message||e.reason))});
+  // 読み込み中を失敗と出さない: JS が動いたか（__jsUp）で見る
+  setTimeout(function(){
+    if(window.__jsUp) return;
+    var l=document.getElementById('loading');if(l)l.style.display='none';
+    var d=document.createElement('div');d.style.cssText='position:fixed;inset:auto 8px 8px 8px;z-index:199;background:#fff;color:#b00;font:12px/1.4 monospace;white-space:pre-wrap;padding:10px';
+    d.textContent='起動できませんでした / failed to start\n'+(errs.join('\n')||'(no error captured)')+'\n'+navigator.userAgent;
+    document.body.appendChild(d);
+  },15000);
+})();
+</script>
+<script src="tm.js?v=1" data-game="wedding-speech"></script>
+<script src="sfx.js?v=1"></script>
+<script src="sound.js?v=1"></script>
+<script src="data.js?v=1"></script>
+<script src="speech.js?v=1"></script>
+<script type="module" src="game.js?v=1"></script>
+<script src="support.js?v=1" data-ja="ご祝儀" data-en="a wedding gift"></script>
+</body>
+</html>
