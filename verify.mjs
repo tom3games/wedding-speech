@@ -1,4 +1,5 @@
 // 検証。node verify.mjs（音は出さない）。スマホ縦3サイズ × 全画面 × Chromium/WebKit、推理の芯、罠、沈黙、事件、英語、OGP、無音
+import './mute-auto.mjs'  // テスト中は絶対に音を出さない（playwright を無音に差し替え）
 import { MUTE_LAUNCH, muteContext } from './mute.mjs'
 import { chromium, webkit } from 'playwright'
 import { spawn, execFileSync } from 'node:child_process'

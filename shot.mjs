@@ -1,4 +1,5 @@
 // 画面を撮る。node shot.mjs [幅x高さ] [webkit]（音は出さない）。shots/ に title・intro・play・item・react・event・black・end を出す
+import './mute-auto.mjs'  // テスト中は絶対に音を出さない（playwright を無音に差し替え）
 import { chromium, webkit } from 'playwright'
 import { MUTE_LAUNCH, muteContext } from './mute.mjs'
 import { spawn } from 'node:child_process'

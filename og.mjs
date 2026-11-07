@@ -1,4 +1,5 @@
 // SNS 用の画像 og.png（1200x630）。一番おもしろい場面（黒歴史を言って新郎が目で止める）＋お礼状＋タイトル。node og.mjs
+import './mute-auto.mjs'  // テスト中は絶対に音を出さない（playwright を無音に差し替え）
 import { chromium } from 'playwright'
 import { MUTE_LAUNCH, muteContext } from './mute.mjs'
 import { spawn } from 'node:child_process'

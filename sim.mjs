@@ -1,5 +1,6 @@
 // 遊び方ごとの点と称号の分布。node sim.mjs [回数=12]（音は出さない）
 // 人間の速さ: 読む bot は一文ごとに2.5〜4.5秒かけて押す（くじ）。読む bot は画面に出ている物（卓の物2つ・しぐさ・事件の状況）だけを使う
+import './mute-auto.mjs'  // テスト中は絶対に音を出さない（playwright を無音に差し替え）
 import { chromium } from 'playwright'
 import { MUTE_LAUNCH, muteContext } from './mute.mjs'
 import { spawn } from 'node:child_process'
