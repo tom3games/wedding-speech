@@ -1,1 +1,0 @@
-Photorealistic photograph of a lush wedding backdrop flower wall filling the entire frame edge to edge: densely packed ivory and blush roses, white hydrangeas and soft greenery, gently lit with warm champagne light, slight soft focus, no people, no text, no signs, no logos, no watermark. Landscape image.
