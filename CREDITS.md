@@ -26,7 +26,7 @@
 - snd/lose.mp3: 85 Short music jingles / Kenney / CC0
 
 ## 画像
-- img/ の人物・会場・小物・花は、このゲームのために画像生成で作った架空のものです（生成元のプロンプトは art/prompts/）。実在の人物・式場・ブランドとは関係ありません。
+- img/ の人物・会場・小物・花は、このゲームのために作った架空のものです。実在の人物・式場・ブランドとは関係ありません。
 
 ## 3D と共通部品
 - vendor/three.module.min.js・three.core.min.js: three.js（MIT）
