@@ -40,7 +40,7 @@ canvas{touch-action:manipulation}
 #corner svg{width:20px;height:20px;fill:#f3e6cc}
 
 /* タイトル: 招待状のカード */
-#vTitle{display:flex;flex-direction:column;justify-content:space-between;padding:calc(64px + env(safe-area-inset-top)) 18px calc(20px + env(safe-area-inset-bottom))}
+#vTitle{display:flex;flex-direction:column;justify-content:space-between;padding:calc(64px + env(safe-area-inset-top)) 18px calc(20px + calc(env(safe-area-inset-bottom) + var(--inapp-bot,0px)))}
 .card{align-self:center;width:min(86vw,360px);background:var(--ivory);color:#3a2a1a;padding:22px 18px 20px;text-align:center;position:relative;transform:rotate(-1.2deg);box-shadow:0 18px 40px rgba(0,0,0,.45)}
 .card::before{content:"";position:absolute;inset:8px;border:1px solid var(--gold);outline:1px solid var(--gold);outline-offset:3px;pointer-events:none}
 .card .ser{font-family:var(--min);font-size:12px;letter-spacing:.4em;color:var(--gold)}
@@ -61,7 +61,7 @@ canvas{touch-action:manipulation}
 #bubble.said{background:rgba(24,18,14,.82);color:#fff6e3;font-family:var(--hand);border:1px solid rgba(226,200,143,.5)}
 #bubble.mc{background:#fff2d9;color:#5a2c12}
 #bubble.cold{background:#e9eef4;color:#2c3546}
-#note{position:fixed;left:0;right:0;bottom:0;z-index:10;padding:0 12px calc(10px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:6px}
+#note{position:fixed;left:0;right:0;bottom:0;z-index:10;padding:0 12px calc(10px + calc(env(safe-area-inset-bottom) + var(--inapp-bot,0px)));display:flex;flex-direction:column;gap:6px}
 #clueRow{display:flex;align-items:flex-end;gap:8px;min-height:44px}
 #clue{flex:1;align-self:center;font-size:clamp(13px,3.7vw,15px);line-height:1.35;color:#fff7e6;background:rgba(18,12,8,.72);padding:7px 11px;border-left:3px solid var(--gold2)}
 #clue.tip{border-left-color:#f08f6a;background:rgba(60,24,16,.8)}
@@ -78,7 +78,7 @@ canvas{touch-action:manipulation}
 #paper.blank .ln{color:transparent}
 
 /* 結果: お礼状 */
-#vEnd{display:flex;flex-direction:column;align-items:center;padding:calc(12px + env(safe-area-inset-top)) 12px calc(10px + env(safe-area-inset-bottom));gap:8px;background:radial-gradient(ellipse at 50% 20%,#3a2a1e,#140e0a)}
+#vEnd{display:flex;flex-direction:column;align-items:center;padding:calc(12px + env(safe-area-inset-top)) 12px calc(10px + calc(env(safe-area-inset-bottom) + var(--inapp-bot,0px)));gap:8px;background:radial-gradient(ellipse at 50% 20%,#3a2a1e,#140e0a)}
 #letterBox{flex:1;min-height:0;width:100%;display:flex;align-items:center;justify-content:center}
 #letter{display:block;box-shadow:0 14px 30px rgba(0,0,0,.5)}
 .endBtns{width:min(100%,420px);display:flex;flex-direction:column;gap:6px}
@@ -89,7 +89,7 @@ canvas{touch-action:manipulation}
 
 /* 重ねる画面 */
 .ovl{position:fixed;inset:0;z-index:30}
-#say{display:flex;flex-direction:column;justify-content:flex-end;padding:0 12px calc(14px + env(safe-area-inset-bottom));background:linear-gradient(transparent 40%,rgba(10,6,4,.55))}
+#say{display:flex;flex-direction:column;justify-content:flex-end;padding:0 12px calc(14px + calc(env(safe-area-inset-bottom) + var(--inapp-bot,0px)));background:linear-gradient(transparent 40%,rgba(10,6,4,.55))}
 #sayImg{position:absolute;right:-4vw;bottom:150px;height:min(56svh,460px);pointer-events:none}
 #sayBox{position:relative;background:var(--paper);color:#2b2218;padding:12px 14px 10px;border-top:3px solid var(--gold)}
 #sayNm{font-size:12px;color:var(--gold);letter-spacing:.1em}
@@ -97,7 +97,7 @@ canvas{touch-action:manipulation}
 #sayBtns{display:flex;justify-content:space-between}
 #sayBtns button{min-height:42px;padding:0 14px;font-weight:700;color:#5b4630}
 #bSayNext{background:#2b2218;color:#f6e9cf!important;border-radius:4px}
-#how{background:rgba(16,10,6,.92);display:flex;flex-direction:column;padding:calc(56px + env(safe-area-inset-top)) 20px calc(16px + env(safe-area-inset-bottom));gap:12px}
+#how{background:rgba(16,10,6,.92);display:flex;flex-direction:column;padding:calc(56px + env(safe-area-inset-top)) 20px calc(16px + calc(env(safe-area-inset-bottom) + var(--inapp-bot,0px)));gap:12px}
 #howBody{flex:1;min-height:0;overflow:hidden;display:flex;flex-direction:column;gap:9px;color:#f2e6cf}
 #howBody h2{font-family:var(--min);font-size:20px;color:var(--gold2)}
 #howBody p{font-size:clamp(12.5px,3.6vw,14.5px);line-height:1.55}
@@ -187,6 +187,6 @@ canvas{touch-action:manipulation}
 <script src="data.js?v=7"></script>
 <script src="speech.js?v=7"></script>
 <script type="module" src="game.js?v=7"></script>
-<script src="support.js?v=7" data-ja="ご祝儀" data-en="a wedding gift"></script>
+<script src="support.js?v=8" data-ja="ご祝儀" data-en="a wedding gift"></script>
 </body>
 </html>
